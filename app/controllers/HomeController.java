@@ -34,6 +34,7 @@ public class HomeController extends Controller {
         ObjectNode payload = Json.newObject();
         String message = String.format("fuck you, %s! You are owned by %s", name, config.getString("owner"));
         payload.put("message", message);
+        payload.put("data", (JsonNode)null);
         return ok(payload);
     }
 
