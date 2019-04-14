@@ -1,11 +1,14 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import clients.ApiClient;
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
-import play.libs.Json;
+import play.libs.concurrent.HttpExecutionContext;
+import play.libs.ws.WSClient;
 import play.mvc.*;
+
+import java.util.concurrent.CompletionStage;
+
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -14,28 +17,17 @@ import play.mvc.*;
 public class HomeController extends Controller {
 
     private final Config config;
+    private final ApiClient apiClient;
+    private final HttpExecutionContext httpExecutionContext;
 
     @Inject
-    public HomeController(Config config) {
+    public HomeController(Config config, WSClient ws, HttpExecutionContext ec) {
+        this.httpExecutionContext = ec;
+        this.apiClient = new ApiClient(ws, config);
         this.config = config;
     }
 
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
     public Result index() {
-        return ok(views.html.index.render());
+        return ok("Hello");
     }
-
-    public Result hello(String name) {
-        ObjectNode payload = Json.newObject();
-        String message = String.format("fuck you, %s! You are owned by %s", name, config.getString("owner"));
-        payload.put("message", message);
-        payload.put("data", (JsonNode)null);
-        return ok(payload);
-    }
-
 }
