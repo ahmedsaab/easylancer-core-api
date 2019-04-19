@@ -10,6 +10,7 @@ import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
 import play.libs.ws.WSClient;
 import play.mvc.Controller;
+import play.mvc.Http.Request;
 import play.mvc.Result;
 import org.bson.types.ObjectId;
 
@@ -52,10 +53,13 @@ public class TaskController extends Controller {
         });
     }
 
-    public CompletionStage<Result> createTask() {
+    public CompletionStage<Result> createTask(Request request) {
+        ObjectNode json = (ObjectNode)request.body().asJson();
         ObjectNode payload = Json.newObject();
 
-        return this.apiClient.fetchUsers().thenApply(response -> {
+        json.put("creatorUser", currentUser);
+
+        return this.apiClient.postTask(json).thenApply(response -> {
             payload.put("data", response);
             return ok(payload);
         });
@@ -144,6 +148,15 @@ public class TaskController extends Controller {
         ObjectNode payload = Json.newObject();
 
         return this.apiClient.fetchUsers().thenApply(response -> {
+            payload.put("data", response);
+            return ok(payload);
+        });
+    }
+
+    public CompletionStage<Result> getAllTasks() {
+        ObjectNode payload = Json.newObject();
+
+        return this.apiClient.fetchTasks().thenApply(response -> {
             payload.put("data", response);
             return ok(payload);
         });

@@ -11,7 +11,8 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # Task Page
 POST     /tasks/:id/edit       controllers.TaskController.editTask(id: String)
 POST     /tasks/:id/apply      controllers.TaskController.applyToTask(id: String)
-POST     /tasks/create         controllers.TaskController.createTask()
+POST     /tasks/create         controllers.TaskController.createTask(request: play.mvc.Http.Request)
 GET      /tasks/:id/view       controllers.TaskController.viewTask(id: String)
+GET      /tasks/view           controllers.TaskController.getAllTasks
 POST     /tasks/:id/review     controllers.TaskController.reviewTask(id: String)
 POST     /tasks/:id/cancel     controllers.TaskController.cancelTask(id: String)

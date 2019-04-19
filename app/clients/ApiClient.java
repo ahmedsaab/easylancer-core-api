@@ -31,6 +31,13 @@ public class ApiClient implements WSBodyReadables, WSBodyWritables {
         );
     }
 
+    public CompletionStage<JsonNode> postTask(JsonNode task) {
+        String url = config.getString("baseUrl") + "/tasks";
+        return this.ws.url(url).post(task).thenApply(r ->
+                r.getBody(json())
+        );
+    }
+
     public CompletionStage<JsonNode> fetchUsers() {
         String url = config.getString("baseUrl") + "/users";
         return this.ws.url(url).get().thenApply(r ->
